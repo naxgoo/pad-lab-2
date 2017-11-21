@@ -1,4 +1,4 @@
 public class Node {
-    boolean isMaster;
-
+    private boolean isMaster;
+    private Payload payload;
 }
