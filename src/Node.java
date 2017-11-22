@@ -1,8 +1,6 @@
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.*;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +34,34 @@ public class Node extends Thread{
 
     @Override
     public void run() {
+
+        Thread nodeTCP = new Thread(() -> {
+            try {
+
+                Thread.sleep(1000);
+
+                ServerSocket socket = new ServerSocket(PORT);
+
+                Socket s = socket.accept();
+
+                PrintWriter out = new PrintWriter(s.getOutputStream(), true);
+
+                out.println(returnNodes());
+
+                for (int i = 0; i < returnNodes(); i++) {
+                    out.println(getSlavePayload(i));
+                }
+
+                out.println(getPayload());
+
+                socket.close();
+
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+
         Thread nodeUDP = new Thread(() -> {
             byte[] buffer = new byte[1024];
             try {
@@ -55,6 +81,8 @@ public class Node extends Thread{
                     socket.send(dp);
                 }
 
+                nodeTCP.start();
+
                 socket.close();
 
             } catch (IOException e) {
@@ -62,20 +90,6 @@ public class Node extends Thread{
             }
         });         nodeUDP.start();
 
-        Thread nodeTCP = new Thread(() -> {
-            try {
-                ServerSocket socket = new ServerSocket(PORT);
 
-                Socket s = socket.accept();
-
-                PrintWriter out = new PrintWriter(s.getOutputStream(), true);
-
-                out.println("Master;FlameBlaster;");
-
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
     }
 }

@@ -29,11 +29,6 @@ public class Main {
         n4.addNode(n2); n4.addNode(n5);
         n5.addNode(n3); n5.addNode(n4);
 
-//        System.out.println(n1.getPayload() + " " + n1.getSlavePayload(0) + " " + n1.getSlavePayload(1));
-//        System.out.println(n2.getSlavePayload(1));
-//        System.out.println(n3.getSlavePayload(1));
-//        System.out.println(n6.getPayload());
-
         Thread t1 = new Thread(n1);
         Thread t2 = new Thread(n2);
         Thread t3 = new Thread(n3);
