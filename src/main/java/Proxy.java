@@ -1,3 +1,5 @@
+import com.google.gson.Gson;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -104,12 +106,11 @@ public class Proxy {
 
                     LOGGER.info("Sending dat to ma brother from another mother.");
 
-                    toClient.println("Oh look what i've found:");
-                    toClient.println(payloads.size());
+                    String json = new Gson().toJson(payloads);
 
-                    for (int i = 0; i < payloads.size(); i++) {
-                        toClient.println(payloads.get(i));
-                    }
+                    toClient.println("Oh look what i've found:");
+
+                    toClient.println(json);
 
                     toClient.println("K THX BYE!");
 

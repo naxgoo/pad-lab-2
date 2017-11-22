@@ -23,12 +23,6 @@ public class Client {
 
         System.out.println(fromProxy.nextLine());
 
-        int n = Integer.parseInt(fromProxy.nextLine().trim());
-
-        for (int i = 0; i < n; i++) {
-            System.out.println(fromProxy.nextLine());
-        }
-
         System.out.println(fromProxy.nextLine());
 
         socket.close();
