@@ -1,7 +1,8 @@
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.PrintWriter;
-import java.math.BigInteger;
 import java.net.*;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,9 +10,9 @@ public class Node extends Thread{
     private boolean isMaster;
     private Payload payload;
     private List<Node> nodes = new ArrayList<>();
-    private BigInteger PORT;
+    private int PORT;
 
-    public Node(boolean isMaster, Payload payload, BigInteger port){
+    public Node(boolean isMaster, Payload payload, int port){
         this.isMaster = isMaster;
         this.payload = payload;
         this.PORT = port;
@@ -47,7 +48,8 @@ public class Node extends Thread{
                 int port = dp.getPort();
 
                 if(new String(dp.getData(), 0, dp.getLength()).equals("PROXY_LOOKING")){
-                    buffer = PORT.toByteArray();
+                    String tcpPort = String.valueOf(PORT);
+                    buffer = tcpPort.getBytes();
                     dp = new DatagramPacket(buffer, buffer.length,
                             InetAddress.getByName("localhost"), port);
                     socket.send(dp);
@@ -62,7 +64,7 @@ public class Node extends Thread{
 
         Thread nodeTCP = new Thread(() -> {
             try {
-                ServerSocket socket = new ServerSocket(PORT.intValue());
+                ServerSocket socket = new ServerSocket(PORT);
 
                 Socket s = socket.accept();
 

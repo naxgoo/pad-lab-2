@@ -22,15 +22,11 @@ public class Proxy {
 
                 LOGGER.info("Server sent UDP packet!");
 
-
-                dp = new DatagramPacket(buffer, buffer.length);
-                socket.receive(dp);
-                System.out.println(new String(buffer, 0 , buffer.length));
-
-                dp = new DatagramPacket(buffer, buffer.length);
-                socket.receive(dp);
-                System.out.println(new String(buffer, 0 , buffer.length));
-
+                for (int i = 0; i < 6; i++) {
+                    dp = new DatagramPacket(buffer, buffer.length);
+                    socket.receive(dp);
+                    System.out.println(new String(buffer, 0 , buffer.length));
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
