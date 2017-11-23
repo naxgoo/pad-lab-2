@@ -1,6 +1,4 @@
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -87,26 +85,15 @@ public class Proxy {
                         ports.add(Integer.parseInt(p.trim()));
                     }
 
-//                    for (int i = 0; i < portsTCP.size(); i++) {
-//                        Socket socket = new Socket("localhost", ports.get(i));
-//
-//                        Scanner fromNode = new Scanner(socket.getInputStream());
-//
-//                        LOGGER.info("Node " + i + " says the following: ");
-//                        String nrNodes = fromNode.nextLine();
-//                        for (int j = 0; j < Integer.valueOf(nrNodes); j++) {
-//                            payloads.add(fromNode.nextLine());
-//                        }
-//                        payloads.add(fromNode.nextLine());
-//                    }
-
                     for (int i = 0; i < portsTCP.size(); i++) {
                         Socket socket = new Socket("localhost", ports.get(i));
 
                         Scanner fromNode = new Scanner(socket.getInputStream());
 
                         LOGGER.info("Node " + i + " says the following in JSON language: ");
+
                         String nrNodes = fromNode.nextLine().trim();
+
                         String json;
                         Gson gson;
                         Payload p;
@@ -123,18 +110,12 @@ public class Proxy {
                     }
 
                     LOGGER.info("That's what yo bro found bout those nodzz: ");
-//                    for (String payload : payloads) {
-//                        LOGGER.info(payload);
-//                    }
 
                     for (Payload payload : payloadObjects){
                         LOGGER.info(payload.toString());
                     }
 
-//                    tempPayloads.addAll(payloads);
-//                    payloads.clear();
-//                    payloads.addAll(tempPayloads);
-
+                    //removing duplicates
                     tempPayloadsObjects.addAll(payloadObjects);
                     payloadObjects.clear();
                     payloadObjects.addAll(tempPayloadsObjects);

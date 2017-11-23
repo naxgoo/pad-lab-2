@@ -1,6 +1,4 @@
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.*;
@@ -61,25 +59,21 @@ public class Node extends Thread{
 
                 out.println(returnNodes());
 
-//                for (int i = 0; i < returnNodes(); i++) {
-//
-//                    out.println(getSlavePayload(i));
-//                }
-
                 //Data serialization
                 Gson gson;
                 String json;
+
                 for (int i = 0; i < returnNodes(); i++) {
                     gson = new Gson();
                     json = gson.toJson(getSlavePayloadasObject(i));
                     LOGGER.info(json);
                     out.println(json);
                 }
+
                 gson = new Gson();
                 json = gson.toJson(getPayloadasObject());
                 LOGGER.info(json);
                 out.println(json);
-//                out.println(getPayload());
 
                 socket.close();
 

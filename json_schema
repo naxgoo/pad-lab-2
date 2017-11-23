@@ -1,0 +1,28 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$id": "/properties/id",
+      "type": "integer",
+      "title": "The Id Schema.",
+      "description": "This is an example ID of the message.",
+      "default": 0,
+      "examples": [
+        1
+      ]
+    },
+    "message": {
+      "$id": "/properties/message",
+      "type": "string",
+      "title": "The Message Schema.",
+      "description": "This is an example message that the object will hold.",
+      "default": "",
+      "examples": [
+        "First"
+      ]
+    }
+  }
+}
