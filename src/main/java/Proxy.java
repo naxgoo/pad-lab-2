@@ -1,4 +1,5 @@
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.*;
 import java.net.*;
@@ -44,8 +45,12 @@ public class Proxy {
 
 
         List<String> payloads = new ArrayList<>();
+        List<Payload> payloadObjects = new ArrayList<>();
+
         List<Integer> ports = new ArrayList<>();
+
         Set<String> tempPayloads = new HashSet<>();
+        Set<Payload> tempPayloadsObjects = new HashSet<>();
         Thread tcp = new Thread(() -> {
             try {
                 ServerSocket serverSocket = new ServerSocket(6781);
@@ -67,9 +72,9 @@ public class Proxy {
                     }
 
                     toClient.println("Knock-knock! Here's Johnny with his UDP discovery!");
-                    udp.start();
 
                     LOGGER.info("Waiting for TCP ports :(");
+                    udp.start();
                     Thread.sleep(1000);
                     LOGGER.info("Waiting is done :)");
 
@@ -82,31 +87,61 @@ public class Proxy {
                         ports.add(Integer.parseInt(p.trim()));
                     }
 
+//                    for (int i = 0; i < portsTCP.size(); i++) {
+//                        Socket socket = new Socket("localhost", ports.get(i));
+//
+//                        Scanner fromNode = new Scanner(socket.getInputStream());
+//
+//                        LOGGER.info("Node " + i + " says the following: ");
+//                        String nrNodes = fromNode.nextLine();
+//                        for (int j = 0; j < Integer.valueOf(nrNodes); j++) {
+//                            payloads.add(fromNode.nextLine());
+//                        }
+//                        payloads.add(fromNode.nextLine());
+//                    }
+
                     for (int i = 0; i < portsTCP.size(); i++) {
                         Socket socket = new Socket("localhost", ports.get(i));
 
                         Scanner fromNode = new Scanner(socket.getInputStream());
 
-                        LOGGER.info("Node " + i + " says the following: ");
-                        String nrNodes = fromNode.nextLine();
+                        LOGGER.info("Node " + i + " says the following in JSON language: ");
+                        String nrNodes = fromNode.nextLine().trim();
+                        String json;
+                        Gson gson;
+                        Payload p;
                         for (int j = 0; j < Integer.valueOf(nrNodes); j++) {
-                            payloads.add(fromNode.nextLine());
+                            json = fromNode.nextLine().trim();
+                            gson = new Gson();
+                            p = gson.fromJson(json, Payload.class);
+                            payloadObjects.add(p);
                         }
-                        payloads.add(fromNode.nextLine());
+                        json = fromNode.nextLine();
+                        gson = new Gson();
+                        p = gson.fromJson(json, Payload.class);
+                        payloadObjects.add(p);
                     }
 
                     LOGGER.info("That's what yo bro found bout those nodzz: ");
-                    for (String payload : payloads) {
-                        LOGGER.info(payload);
+//                    for (String payload : payloads) {
+//                        LOGGER.info(payload);
+//                    }
+
+                    for (Payload payload : payloadObjects){
+                        LOGGER.info(payload.toString());
                     }
 
-                    tempPayloads.addAll(payloads);
-                    payloads.clear();
-                    payloads.addAll(tempPayloads);
+//                    tempPayloads.addAll(payloads);
+//                    payloads.clear();
+//                    payloads.addAll(tempPayloads);
+
+                    tempPayloadsObjects.addAll(payloadObjects);
+                    payloadObjects.clear();
+                    payloadObjects.addAll(tempPayloadsObjects);
 
                     LOGGER.info("Sending dat to ma brother from another mother.");
 
-                    String json = new Gson().toJson(payloads);
+                    String json = new Gson().toJson(payloadObjects);
 
                     toClient.println("Oh look what i've found:");
 

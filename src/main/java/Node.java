@@ -1,37 +1,47 @@
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Node extends Thread{
-    private boolean isMaster;
+
+    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
+
     private Payload payload;
     private List<Node> nodes = new ArrayList<>();
     private int PORT;
 
-    public Node(boolean isMaster, Payload payload, int port){
-        this.isMaster = isMaster;
+    Node(Payload payload, int port){
         this.payload = payload;
         this.PORT = port;
     }
 
-    public void addNode(Node node){
+    void addNode(Node node){
         nodes.add(node);
     }
 
-    public String getPayload(){
+    private String getPayload(){
         return payload.getId() + " " + payload.getMessage();
     }
 
-    public String getSlavePayload(int i){
+    private String getSlavePayload(int i){
         return nodes.get(i).payload.getId() + " " +nodes.get(i).payload.getMessage();
     }
 
-    public int returnNodes(){
+    private Payload getSlavePayloadasObject(int i){
+        return nodes.get(i).payload;
+    }
+
+    private Payload getPayloadasObject(){
+        return this.payload;
+    }
+
+    private int returnNodes(){
         return nodes.size();
     }
 
@@ -40,7 +50,7 @@ public class Node extends Thread{
 
         Thread nodeTCP = new Thread(() -> {
             try {
-
+                //Giving time for UDP to send its packets
                 Thread.sleep(1000);
 
                 ServerSocket socket = new ServerSocket(PORT);
@@ -51,11 +61,25 @@ public class Node extends Thread{
 
                 out.println(returnNodes());
 
-                for (int i = 0; i < returnNodes(); i++) {
-                    out.println(getSlavePayload(i));
-                }
+//                for (int i = 0; i < returnNodes(); i++) {
+//
+//                    out.println(getSlavePayload(i));
+//                }
 
-                out.println(getPayload());
+                //Data serialization
+                Gson gson;
+                String json;
+                for (int i = 0; i < returnNodes(); i++) {
+                    gson = new Gson();
+                    json = gson.toJson(getSlavePayloadasObject(i));
+                    LOGGER.info(json);
+                    out.println(json);
+                }
+                gson = new Gson();
+                json = gson.toJson(getPayloadasObject());
+                LOGGER.info(json);
+                out.println(json);
+//                out.println(getPayload());
 
                 socket.close();
 

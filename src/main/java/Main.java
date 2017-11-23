@@ -16,12 +16,12 @@ public class Main {
         p5.setId(5); p5.setMessage("Fifth");
         p6.setId(6); p6.setMessage("Sixth");
 
-        Node n6 = new Node (false, p6, 7000);
-        Node n5 = new Node (true, p5, 7001);
-        Node n4 = new Node (true, p4, 7002);
-        Node n3 = new Node (true, p3, 7003);
-        Node n2 = new Node(true, p2, 7004);
-        Node n1 = new Node (true, p1, 7005);
+        Node n6 = new Node (p6, 7000);
+        Node n5 = new Node (p5, 7001);
+        Node n4 = new Node (p4, 7002);
+        Node n3 = new Node (p3, 7003);
+        Node n2 = new Node(p2, 7004);
+        Node n1 = new Node (p1, 7005);
 
         n1.addNode(n2); n1.addNode(n3);
         n2.addNode(n1); n2.addNode(n4);
