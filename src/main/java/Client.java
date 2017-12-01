@@ -38,8 +38,18 @@ public class Client {
         gson.toJson(jsonResponse);
         Schema schema = SchemaLoader.load(
                 new JSONObject(
-                        new FileInputStream("C:\\Users\\bezua\\IdeaProjects\\lab_2\\json_schema")));
-        schema.validate(gson);
+                        new JSONTokener(
+                            new FileInputStream("C:\\Users\\bezua\\IdeaProjects\\lab_2\\json_schema")
+                        )
+                )
+        );
+        try {
+            schema.validate(gson);
+        } catch (Exception e){
+            System.out.println("Something's wrong with your data. Be careful bro!");
+            socket.close();
+            return;
+        }
 
         System.out.println(jsonResponse);
 
